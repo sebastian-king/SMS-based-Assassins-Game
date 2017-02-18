@@ -1,0 +1,7 @@
+RewriteEngine On
+RewriteBase /
+RewriteRule ^u/(.*?)/v([a-zA-Z0-9]{6})$ /user/index.php?q=$1&v=$2
+RewriteRule ^u/(.*?)(/|)$ /user/index.php?q=$1
+RewriteRule ^p/(.*?)(/|)$ /pin/index.php?q=$1
+
+Options -Indexes
