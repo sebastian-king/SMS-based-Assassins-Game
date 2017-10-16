@@ -1,17 +1,28 @@
 <?php
-function email($to, $subject, $message, $replyto = false, $headers = NULL) {
-	global $sendgrid;
-	$reply = ($replyto ? "$replyto" : "no-reply@assassins.in");
-	$email = new SendGrid\Email();
 
-	$email->addTo("$to")
-		  ->setFrom("admin@assassins.in")
-		  ->setFromName('MHS Assassins 2015')
-		  ->setSubject("$subject")
-		  ->setReplyTo('$replyto')
-		  ->setHtml("$message");
-		  
-	return $sendgrid->send($email)->message == "success" ? true : false;
+function begun() {
+	return time() > GAME_START;
+}
+
+function registration_ended() {
+	return time() > REGISTRATION_DEADLINE;
+}
+
+function format_phone_number($phone_number) {
+	$numeric_phone_number = intval($phone_number);
+	return '('.substr($numeric_phone_number, 0, 3).') '.substr($numeric_phone_number, 3, 3).'-'.substr($numeric_phone_number,6);
+}
+
+function email($to, $subject, $message, $replyto = false, $headers = NULL) {
+        $replyto = ($replyto ? "$replyto" : EMAIL_NAME . ' <' . EMAIL_USER . '@' . EMAIL_DOMAIN . '>');
+        if (!$headers || $headers == NULL) {
+                $headers  = 'MIME-Version: 1.0' . "\r\n";
+                $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+                $headers .= 'From: ' . EMAIL_NAME . ' <no-reply@' . EMAIL_DOMAIN . '.net>' . "\r\n" .
+                'Reply-To: ' . $replyto . "\r\n" .
+                'X-Mailer: PHP/' . phpversion();
+        }
+        return mail($to, $subject, $message, $headers);
 }
 
 function smsUpdate($msg, $to, $carrier = NULL) {
@@ -200,3 +211,35 @@ function ordinal($num) {
     }
     return $num.'th';
 }
+
+/* token generation functions start */
+function crypto_rand_secure($min, $max) {
+        $range = $max - $min;
+        if ($range < 0) return $min; // not so random...
+        $log = log($range, 2);
+        $bytes = (int) ($log / 8) + 1; // length in bytes
+        $bits = (int) $log + 1; // length in bits
+        $filter = (int) (1 << $bits) - 1; // set all lower bits to 1
+        do {
+            $rnd = hexdec(bin2hex(openssl_random_pseudo_bytes($bytes)));
+            $rnd = $rnd & $filter; // discard irrelevant bits
+        } while ($rnd >= $range);
+        return $min + $rnd;
+}
+
+function generate_secure_token($length){
+    $token = "";
+    $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    $codeAlphabet.= "abcdefghijklmnopqrstuvwxyz";
+    $codeAlphabet.= "0123456789";
+    for($i=0;$i<$length;$i++){
+        $token .= $codeAlphabet[crypto_rand_secure(0,strlen($codeAlphabet))];
+    }
+    return $token;
+}
+
+function generate_unsecure_token($name_length = 6) {
+	$alpha_numeric = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	return substr(str_shuffle($alpha_numeric), 0, $name_length);
+}
+/* token generation functions end */

@@ -112,7 +112,7 @@ require("template/top.php");
                         <div id="success"></div>
                         <div class="row">
                             <div class="form-group col-xs-12">
-                                <?php if (time() > REGISTRATION_DEADLINE): ?>
+                                <?php if (registration_ended()): ?>
                                 <center><div class="alert alert-info" role="alert">Registrations are now closed!</div></center>
                                 <?php else: ?>
                                 <button type="submit" class="btn btn-lg btn-primary btn-block">Register</button>
@@ -143,7 +143,7 @@ require("template/top.php");
                 <p class="lead">The game of Assassins is a student run tradition held at Martin each year. Through the years the game has been run by different students who elect themselves to take on the project. The game is simple, although changes are made with each passing year, rules are added and modified, it has evolved much since its original version.<br><br>
 The game starts with students registering themselves as contestants. This is done specifically so that the competition is by choice only. Next, these players are all randomly assigned targets. This is done in a way so that every student has a different target, and every student has someone targeting them.<br><br>
 Once the hunt begins each student attempts to seek out their target and “assassinate” them. This is done by surprising their target and marking their skin with a sharpie marker. Once marked, that player is officially eliminated from the game. The assassin is then given his/her victim’s target.<br><br>
-When eliminated, both players must text (817)-369-3691. The person who made the kill will send the message “eliminated” and the person killed will send “rip”. From there the target will be taken out of the system, and the system will inform the assassin of their new target.<br><br>
+When eliminated, both players must text <?php echo format_phone_number(PHONE_NUMBER); ?>. The person who made the kill will send the message “eliminated” and the person killed will send “rip”. From there the target will be taken out of the system, and the system will inform the assassin of their new target.<br><br>
 This idea is continued until there is only two players left in the pool. Each of them would have each other as targets so the last man standing wins.<br><br>
 One of the newer additions to the game is the “swiper no swiping” rule. Players are allowed to call out this phrase if they spot their assassin first which would grant them immunity from being assassinated by that assassin for the rest of the day. This ability can only be used once by the hunted for that particular assassin. If the assassin gets killed, his/her target is given the ability one more time against his/her new assassin.</p>
             </div
@@ -209,7 +209,11 @@ One of the newer additions to the game is the “swiper no swiping” rule. Play
                         <div class="row">
                             <div class="col-sm-12 wow fadeIn" data-wow-delay=".2s">
                                 <h3><i class="fa fa-clock-o fa-lg"></i> Start/End</h3>
-                                <p>On the 2nd of April the game officially started at 12:01 AM.<br>Registrations closed 24 hours before the game starts.<br>It all ends when there is one man left standing.</p>
+                                <?php if (begun()): ?>
+								<p>On the <?php echo date("jS \of F", GAME_START); ?> the game officially started at <?php echo date("h:i A", GAME_START); ?>.<br>Registrations closed <?php echo abs(round((GAME_START - REGISTRATION_DEADLINE)/3600)); ?> hours before the game starts.<br>It all ends when there is one man left standing.</p>
+								<?php else: ?>
+								<p>On the <?php echo date("jS \of F", GAME_START); ?> the game will officially start at <?php echo date("h:i A", GAME_START); ?>.<br>Registrations close <?php echo abs(round((GAME_START - REGISTRATION_DEADLINE)/3600)); ?> hours before the game starts.<br>It all ends when there is one man left standing.</p>
+								<?php endif ?>
                             </div>
                         </div>
                         <div class="row">
@@ -217,8 +221,8 @@ One of the newer additions to the game is the “swiper no swiping” rule. Play
                                  <h3><i class="fa fa-pencil fa-lg"></i> Tagging</h3>
                                 <p>If you are tagged or you get tagged:<br>
                                     <ul>
-                                    <li>If you were the assassin text “eliminated” to (817)-369-3691</li>
-									<li>If you were assassinated text “rip” to (817)-369-3691</li>
+                                    <li>If you were the assassin text “eliminated” to <?php echo format_phone_number(PHONE_NUMBER); ?></li>
+									<li>If you were assassinated text “rip” to <?php echo format_phone_number(PHONE_NUMBER); ?></li>
                                     </ul>
       								Note: both messages must be within five minutes of each other</p>
                             </div>
@@ -263,7 +267,11 @@ One of the newer additions to the game is the “swiper no swiping” rule. Play
         <div class="row">
             <div class="col-xs-12 text-center wow fadeIn">
                 <h2 class="heading">The Countdown</h2>
+                <?php if (begun()): ?>
                 <h3>The games have begun! Time elapsed:</h3>
+                <?php else: ?>
+                <h3>The games will begin in:</h3>
+                <?php endif ?>
             </div>
         </div>
     </div>
@@ -316,7 +324,7 @@ One of the newer additions to the game is the “swiper no swiping” rule. Play
         <div class="modal-body">
             <h2>Commands</h2>
             <hr>
-            <p>To use any of these commands you must text them to (817)-369-3691.</p>
+            <p>To use any of these commands you must text them to <?php echo format_phone_number(PHONE_NUMBER); ?>.</p>
             <p><b>#&lt;message&gt;</b> - This messages the administrators of the game, and we can reply directly through the Assassins number.</p>
             <p><b>top</b> - Gives you a list of the top 10 ranked players and a link to the statistics page</p>
             <p><b>eliminated</b> - Text this only when you have eliminated your target</p>
@@ -364,14 +372,14 @@ One of the newer additions to the game is the “swiper no swiping” rule. Play
     <div class="container-fluid overlay text-center">
         <div class="col-md-6 col-md-offset-3 wow fadeIn">
             <h2 class="heading">Contact Us</h2>
-            <h2><i class="fa fa-phone fa-fw"></i>(817) 369-3691</h2>
+            <h2><i class="fa fa-phone fa-fw"></i><?php echo format_phone_number(PHONE_NUMBER); ?></h2>
             <p>Feel free to contact us to provide some feedback, give us suggestions, or even to just say hello!</p>
                 <ul class="list-inline">
                     <li>
-                        <a href="https://twitter.com/Assassins2k15"><i class="fa fa-twitter fa-2x fa-fw"></i></a>
+                        <a href="https://twitter.com/<?php echo TWITTER_HANDLE; ?>"><i class="fa fa-twitter fa-2x fa-fw"></i></a>
                     </li>
                     <li>
-                        <a href="mailto:admin@assassins.in"><i class="fa fa-envelope-o fa-2x  fa-fw"></i></a>
+                        <a href="mailto:<?php echo SUPPORT_EMAIL; ?>"><i class="fa fa-envelope-o fa-2x  fa-fw"></i></a>
                     </li>
                 </ul>
         </div>
@@ -382,13 +390,14 @@ One of the newer additions to the game is the “swiper no swiping” rule. Play
 <footer>
     <div class="container text-muted text-center wow fadeIn">
         <h2 class="heading"><a href="#top">ASSASSINS <i class="fa fa-heartbeat"></i></a></h2>
-        <p>2015 Martin High School Assassins Game</p>
+        <p>2015 Martin High School Assassins Game. No Copyright.</p>
     </div>
 </footer>
 
 <script src="/js/jquery.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/hybrid.js"></script>
+<script src="/js/register.js"></script>
 <script src="/js/wow.min.js"></script>
 <script src="/js/jquery.placeholder.min.js"></script>
 <script src="/js/TimeCircles.js"></script>
