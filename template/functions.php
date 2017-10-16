@@ -238,8 +238,8 @@ function generate_secure_token($length){
     return $token;
 }
 
-function generate_unsecure_token($name_length = 6) {
+function generate_insecure_token($length = 6) {
 	$alpha_numeric = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-	return substr(str_shuffle($alpha_numeric), 0, $name_length);
+	return substr(str_shuffle($alpha_numeric), 0, $length);
 }
 /* token generation functions end */

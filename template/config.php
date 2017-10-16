@@ -1,7 +1,8 @@
 <?php
 
 /* timezone */
-define(TIMEZONE, "America/Chicago");
+define("TIMEZONE", "America/Chicago");
+date_default_timezone_set(TIMEZONE);
 
 /* paths */
 define("BASE_PATH", getenv('BASE_PATH')); // no trailing slash (set this parameter in the .htaccess file)

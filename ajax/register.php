@@ -11,21 +11,21 @@ $fields = array(
 foreach ($fields as $key => $ret) {
 	$val = @$_POST[$key];
 	if (empty($val)) {
-		die($ret["invalid"]);
+		die((string)$ret["invalid"]);
 	}
 	if (isset($ret["duplicate"])) {
 		$q = $db->query("SELECT * FROM players WHERE ".$key." = '".$db->real_escape_string($val)."' LIMIT 1") or die("0");
 		if ($q->num_rows != 0) {
-			die($ret["duplicate"]);
+			die((string)$ret["duplicate"]);
 		}
 	}
 	switch ($key) {
 		case "email":
-			filter_var($val, FILTER_VALIDATE_EMAIL) or die($ret["invalid"]);
+			filter_var($val, FILTER_VALIDATE_EMAIL) or die((string)$ret["invalid"]);
 		break;
 		case "phone":
 			$val = preg_replace('/\s+(#|x|ext(ension)?)\.?:?\s*(\d+)/', ' ext \3', $val);
-			preg_match('/^(\+\s*)?((0{0,2}1{1,3}[^\d]+)?\(?\s*([2-9][0-9]{2})\s*[^\d]?\s*([2-9][0-9]{2})\s*[^\d]?\s*([\d]{4})){1}(\s*([[:alpha:]#][^\d]*\d.*))?$/', $val, $m) or die($ret["invalid"]);
+			preg_match('/^(\+\s*)?((0{0,2}1{1,3}[^\d]+)?\(?\s*([2-9][0-9]{2})\s*[^\d]?\s*([2-9][0-9]{2})\s*[^\d]?\s*([\d]{4})){1}(\s*([[:alpha:]#][^\d]*\d.*))?$/', $val, $m) or die((string)$ret["invalid"]);
 		break;
 	}
 }
@@ -59,7 +59,7 @@ $e = email($email,
 		   <br>
 		   <a href='https://{SITE_SUPERDOMAIN}/u/$token/v$email_verification_token'>Click here to confirm your e-mail address.</a>
 		   <br>
-		   <b>Please note:</b> You will also have to confirm your phone number, if you do not receive a text message from us soon then please text <b>{$db->insert_id}#$email_verification_token</b> to ".formatted_phone_number(PHONE_NUMBER)." to confirm your phone number.
+		   <b>Please note:</b> You will also have to confirm your phone number, if you do not receive a text message from us soon then please text <b>{$db->insert_id}#$email_verification_token</b> to ".format_phone_number(PHONE_NUMBER)." to confirm your phone number.
 		   <br>
 		   <br>
 		   Best regards,

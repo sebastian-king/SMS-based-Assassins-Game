@@ -1,7 +1,5 @@
 <?php
 
-date_default_timezone_set(TIMEZONE);
-
 require_once("config.php");
 require_once(BASE_PATH . "/api/Services/Twilio.php");
 require_once(BASE_PATH . "/template/functions.php");
