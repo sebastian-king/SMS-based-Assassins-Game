@@ -1,0 +1,6 @@
+AuthType Basic
+AuthName "ASSASSINS ADMINISTRATION"
+AuthUserFile /var/www/assassins/tmp/.htpasswd
+Require valid-user
+
+Options +Indexes
