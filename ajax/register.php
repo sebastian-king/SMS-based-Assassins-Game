@@ -39,7 +39,7 @@ $phone_verification_token = strtolower(generate_insecure_token(6));
 
 $db->query("
 INSERT INTO `players`
-(`name`,`email`,`phone`,`uid`,`vere`,`verp`)
+(`name`,`email`,`phone`,`uid`,`verify_email`,`verify_phone`)
 
 VALUES
 ('".$db->real_escape_string($name)."',
