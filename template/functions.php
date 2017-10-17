@@ -183,14 +183,14 @@ function rank($id, $top = false) {
 	if ($top) {
 		$a = array();
 		$i = 1;
-		while ($r = $q->fetch_array(MYSQL_ASSOC)) {
+		while ($r = $q->fetch_array(MYSQLI_ASSOC)) {
 			$a[] = array_merge(array("rank"=>$i), $r); // if $key != $i; ?
 			$i++;
 		}
 		return $a;
 	} else {
 		$i = 1;
-		while ($r = $q->fetch_array(MYSQL_ASSOC)) {
+		while ($r = $q->fetch_array(MYSQLI_ASSOC)) {
 			if ($id == $r['id']) {
 				return array_merge(array("rank"=>$i, "in_game"=>true), $r);
 			} else {
