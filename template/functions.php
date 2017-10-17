@@ -110,21 +110,21 @@ function tweet($msg, $media = false) {
 function uid2name($uid) {
 	global $db;
 	$q = $db->query("SELECT name FROM players WHERE id = '".$db->real_escape_string($uid)."' LIMIT 1");
-	$r = $q->fetch_array(MYSQL_NUM);
+	$r = $q->fetch_array(MYSQLI_NUM);
 	return trim($r[0]);
 }
 
 function uid2uid($uid) {
 	global $db;
 	$q = $db->query("SELECT uid FROM players WHERE id = '".$db->real_escape_string($uid)."' LIMIT 1");
-	$r = $q->fetch_array(MYSQL_NUM);
+	$r = $q->fetch_array(MYSQLI_NUM);
 	return trim($r[0]);
 }
 
 function uid2phone($uid) {
 	global $db;
 	$q = $db->query("SELECT phone FROM players WHERE id = '".$db->real_escape_string($uid)."' LIMIT 1");
-	$r = $q->fetch_array(MYSQL_NUM);
+	$r = $q->fetch_array(MYSQLI_NUM);
 	return $r[0];
 }
 

@@ -2,26 +2,6 @@
 
 	var app = {
 		init: function(){
-
-			$('#showEmailForm').on('click', function(e){ // When the "Email" button is clicked...
-				e.preventDefault(); // Stop the page from jumping to the top
-				$('.actions a, .actions span').fadeOut(500, function(){ // Fade out our links & "OR" seperator
-					$('.actions form').fadeIn(500); // Fade in our email form
-				});
-			});
-
-			$('#emailForm').on('submit', function(e){ // When the email form is submitted
-				e.preventDefault();
-
-				var $this = $(this),
-					email = $this.find('[name="email"]').val();
-
-				$('.actions, .initial-content').fadeOut(500, function(){ // Fade out our links & "OR" seperator
-					$('.thanks').fadeIn(500); // Fade in thank you content
-				});
-
-				app.handleEmail({email: email}); // This is the method you'd use to handle the user's email address (i.e save it to a database, etc)... 
-			});
 		},
 		handleEmail: function(data){
 			/* Handle the user's email address here... */

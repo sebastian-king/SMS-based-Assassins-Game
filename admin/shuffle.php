@@ -1,9 +1,6 @@
 <?php
-set_time_limit(0);
-require("/var/www/assassins/template/top.php");
-require("/var/www/assassins/api/Services/Twilio.php");
-$client = new Services_Twilio("AC220f04b1ab251758b0cb7279b1184cc9", "32a60dc935f29520ef43c77f3b6e2a36");
-
+set_time_limit(30);
+require("../template/top.php");
 //
 if (preg_match("/sandbox/i", @$argv[1])) {
 	$SANDBOX = true;
@@ -19,7 +16,7 @@ echo $q->num_rows . "\n";
 $players = array();
 $shuffled_players = array();
 
-while ($r = $q->fetch_array(MYSQL_ASSOC)) {
+while ($r = $q->fetch_array(MYSQLI_ASSOC)) {
 	$players[$r['id']] = array("id" => $r['id'], "name" => $r['name'], "target" => $r['target']);
 }
 
@@ -67,7 +64,7 @@ if ($SANDBOX) {
 echo "\nKILL NOW IF POOL LARGER THAN 1\n";
 
 $i = 0;
-while ($i < 60) {
+while ($i < 10) {
 	echo "$i		\r";
 	$i++;
 	sleep(1);
@@ -82,17 +79,18 @@ foreach ($shuffled_players as $key => $val) {
 // now start sending
 
 $q = $db->query("SELECT * FROM players WHERE target > '' ORDER BY id ASC");
-while ($r = $q->fetch_array(MYSQL_ASSOC)) {
-		echo "(".str_pad($r['validated'], 5).") " . str_pad($r['name'], 25, " ") . " => 0 (".$r['pin'].") => ".str_pad(uid2name($r['target']), 25, " ");
+while ($r = $q->fetch_array(MYSQLI_ASSOC)) {
+		echo "(".str_pad($r['validated'], 5).") " . str_pad($r['name'], 25, " ") . " => 0 (".$r['pin'].") => ".str_pad(uid2name($r['target']), 25, " ") . PHP_EOL;
 		try {
-			$sms = $client->account->messages->sendMessage(
-				"8173693691", 
-				$r['phone'],
-				uid2name($r['target'])
-			);
-			echo var_export($sms->status, true)."\n";
-		} catch (Exception $e) {
-			echo var_export("ERROR CAUGHT", true)."\n";
+				$sms = $twilio_client->messages->create(
+						$r['phone'],
+						array(
+								'from' => PHONE_NUMBER,
+								'body' => uid2name($r['target'])
+						)
+				);
+		} catch (Twilio\Exceptions\RestException $e) {
+			echo var_dump("ERROR CAUGHT $e")."\n";
 		}
 		//usleep(100000);
 }

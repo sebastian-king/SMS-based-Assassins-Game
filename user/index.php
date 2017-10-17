@@ -4,7 +4,7 @@ session_start();
 $u = $_GET['q'];
 $q = $db->query("SELECT * FROM players WHERE uid = '".$db->real_escape_string($u)."' LIMIT 1") or die("Database error, please let us know of this URL.");
 if ($q->num_rows == 1) {
-	$u = $q->fetch_array(MYSQL_ASSOC);
+	$u = $q->fetch_array(MYSQLI_ASSOC);
 	if (isset($_GET['v'])) {
 		if ($_GET['v'] == $u['vere']) {
 			if ($u['validated'] == 'phone' || $u['validated'] == 'both') {
@@ -62,7 +62,7 @@ if ($q->num_rows == 1) {
                      <?php
 					$k = 0;
 					$q = $db->query("SELECT * FROM assassinations WHERE target = '{$u['id']}' AND ver = 'both'");
-					while ($r = $q->fetch_array(MYSQL_ASSOC)) {
+					while ($r = $q->fetch_array(MYSQLI_ASSOC)) {
 						if ($r['assassin'] == $r['target']) {
 							?>
                             <div class="content">
@@ -94,7 +94,7 @@ if ($q->num_rows == 1) {
 					?>
                     <?php
 					$q = $db->query("SELECT * FROM assassinations WHERE assassin = '{$u['id']}' AND ver = 'both' ORDER BY id DESC");
-					while ($r = $q->fetch_array(MYSQL_ASSOC)) {
+					while ($r = $q->fetch_array(MYSQLI_ASSOC)) {
 						if ($r['assassin'] == $r['target'] || $r['assassin'] == 0) { continue; }
 						$k++;
 						?>
@@ -109,7 +109,7 @@ if ($q->num_rows == 1) {
 						?>
                         <div class="content">
                             <div class="initial-content">
-                                <p><?php echo $u['name']; ?> hasn't yet gotten any kills, but is still in the game!</p>
+                                <p><?php echo $u['name']; ?> hasn't yet got any kills, but is still in the game!</p>
                             </div>
                         </div>
                         <?php
@@ -154,7 +154,7 @@ if ($q->num_rows == 1) {
 							<div class="phone-countdown">
 								<div class="countdown-item">
 									<div class="countdown-number countdown-days"><?php echo $kills; ?></div>
-									<div class="countdown-value">kills</div>
+									<div class="countdown-value">kill<?php echo $kills == 1 ? "" : "s"; ?></div>
 								</div>	
 
 								<div class="countdown-item">

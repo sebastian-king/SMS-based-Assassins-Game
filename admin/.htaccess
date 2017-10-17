@@ -1,6 +1,10 @@
+SetEnv BASE_PATH /var/www/assassins
+
+
 AuthType Basic
 AuthName "ASSASSINS ADMINISTRATION"
-AuthUserFile /var/www/assassins/tmp/.htpasswd
+AuthUserFile /var/www/assassins/admin/.htpasswd
 Require valid-user
 
 Options +Indexes
+

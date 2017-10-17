@@ -10,7 +10,7 @@ echo $q->num_rows . "\n";
 $players = array();
 //$shuffled_players = array();
 
-while ($r = $q->fetch_array(MYSQL_ASSOC)) {
+while ($r = $q->fetch_array(MYSQLI_ASSOC)) {
 	$players[$r['id']] = array("id" => $r['id'], "name" => $r['name'], "target" => $r['target']);
 }
 
