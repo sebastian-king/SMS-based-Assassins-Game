@@ -1,1 +1,2 @@
-template/config.php # keep this private
+template/config.php	# keep this private
+_notes/			# remove the dropbox sync folders
