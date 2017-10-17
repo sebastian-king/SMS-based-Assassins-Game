@@ -1,13 +1,5 @@
 <?php
 require("../template/top.php");
-require("Services/Twilio.php");
-
-$client = new Services_Twilio("AC220f04b1ab251758b0cb7279b1184cc9", "32a60dc935f29520ef43c77f3b6e2a36");
-
-function generate_random_string($name_length = 6) {
-	$alpha_numeric = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-	return substr(str_shuffle($alpha_numeric), 0, $name_length);
-}
 
 function handle_blocked($exception) {
 	global $client, $from, $db;
@@ -17,7 +9,7 @@ function handle_blocked($exception) {
 		$sms = $client->account->messages->sendMessage(
 			"8722218220", 
 			$from,
-			"You have blocked 8173693691, you will not be able to play in Assassins without unblocking it. To unblock it, text START to 8173693691."
+			"You have blocked " . PHONE_NUMBER . ", you will not be able to play in Assassins without unblocking it. To unblock it, text START to " . PHONE_NUMBER . "."
 		);
 		$q = $db->query("SELECT name FROM players WHERE phone = '".$db->real_escape_string($from)."' LIMIT 1");
 		if ($q->num_rows == 1) {
@@ -28,7 +20,7 @@ function handle_blocked($exception) {
 		}
 		preg_match('/^(\d{3})(\d{3})(\d{4})$/', $from,  $matches);
 		$from = '('.$matches[1] . ')-' .$matches[2] . '-' . $matches[3];
-		groupme_sys_bot("BLOCKED by $from ".(($name) ? "($name) " : "")." -> 8173693691 (unblock by texting START)");
+		groupme_sys_bot("BLOCKED by $from ".(($name) ? "($name) " : "")." -> " . PHONE_NUMBER . " (unblock by texting START)");
 		die();
 	}
 }
@@ -75,7 +67,7 @@ if ($_REQUEST['NumMedia'] > 0) {
 			"You are not registered for assassins, but thank you for your picture anyway. :)"
 		);
 	}
-} else if (preg_match("/^#(.+)/i", $msg, $m)) { // if just '#' then wtf do you want, to substr or to $m is the question
+} else if (preg_match("/^#(.+)/i", $msg, $m)) { // if just '#' then what do you want, to substr or to $m is the question
 	$q = $db->query("SELECT * FROM players WHERE phone = '".$db->real_escape_string($from)."' LIMIT 1");
 	if ($q->num_rows == 1) {
 		$r = $q->fetch_array(MYSQL_ASSOC);
@@ -84,7 +76,7 @@ if ($_REQUEST['NumMedia'] > 0) {
 		groupme_user_bot("($from): ".$m[1]);
 	}
 	// msg received and understood
-} else if (preg_match("/^start$/i", $msg)) {
+} else if (preg_match("/^start$/i", $msg)) { // maybe allow for whitespace either side
 	$sms = $client->account->messages->sendMessage(
 		"8173693691", 
 		$from,
@@ -149,7 +141,7 @@ if ($_REQUEST['NumMedia'] > 0) {
 					$sms = $client->account->messages->sendMessage(
 						"8173693691", 
 						$r['phone'],
-						"Your assassin says they have eliminated you. Reply with rip <pin> to confirm this or norip if they haven't assassinated you. E.G: rip 1234 or norip."
+						"Your assassin says they have eliminated you. Reply with rip <pin> to confirm this or norip if they haven't assassinated you. E.g: rip 1234 or norip."
 					);
 				} // else o.O!!
 			}

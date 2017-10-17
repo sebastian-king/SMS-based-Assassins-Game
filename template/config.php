@@ -19,14 +19,20 @@ define("DATABASE_NAME", "assassins");
 define("DATABASE_CHARSET", "utf8");
 
 /* api keys */
-define("TWILIO_ACCOUNT_SID", "AC9a67afc3c60366f598293b56054f00b3");
-define("TWILIO_AUTH_TOKEN", "c8e6e74915113ace8ee18e6168e58a91");
+/* production credentials
+define("TWILIO_ACCOUNT_SID", "AC0249f17cca78fe8b1beaba24ab9c3e43");
+define("TWILIO_AUTH_TOKEN", "6cde05700d18f51469e89aa19b05ca6e");
+*/
+/* test credentials */
+define("TWILIO_ACCOUNT_SID", "AC731a51b222d45be066692edfb6bdaef4");
+define("TWILIO_AUTH_TOKEN", "f8a8c5593277f0bbc8c4068d1a513ba1");
+/**/
 
 /* general */
 define("GAME_NAME", "Assassins DEMO");
 define("SITE_SUPERDOMAIN", "assassins.in"); // please make sure that this is the top level domain that you will be operating on, and not www.
 define("ADMIN_NAME", "Seb"); // this is used mostly as a signature for friendly messages
-define("PHONE_NUMBER", "8173693691"); // digits only here please, no brackets or dashes
+define("PHONE_NUMBER", "5005550006"); // digits only here please, no brackets or dashes
 
 define("SMS_EMAIL_FROM_ADDRESS", "updates@m.assassins.in");
 define("TWITTER_HANDLE", "assassins2k15");

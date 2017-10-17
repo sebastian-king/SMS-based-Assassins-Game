@@ -51,30 +51,36 @@ VALUES
 ") or die(0);
 
 $e = email($email,
-		   "Confirm your entry to {GAME_NAME}!",
+		   "Confirm your entry to " . GAME_NAME . "!",
 		   "Hello, ".current(explode(" ", $name))."!
-		   <br>
-		   <br>
-		   Welcome to {GAME_MAME}!
-		   <br>
+		   <br><br>
+		   Welcome to " . GAME_NAME . "!
+		   <br><br>
 		   <a href='https://{SITE_SUPERDOMAIN}/u/$token/v$email_verification_token'>Click here to confirm your e-mail address.</a>
-		   <br>
+		   <br><br>
 		   <b>Please note:</b> You will also have to confirm your phone number, if you do not receive a text message from us soon then please text <b>{$db->insert_id}#$email_verification_token</b> to ".format_phone_number(PHONE_NUMBER)." to confirm your phone number.
-		   <br>
-		   <br>
+		   <br><br>
 		   Best regards,
-		   <br>
-		   {ADMIN_NAME}"); 
+		   <br>" . ADMIN_NAME); 
 //error_log("EMAIL_SEND=$e=" . $email . "\n", 3,"mail.log"); // just in case
 
-$sms = $twilio_client->account->messages->sendMessage(
-	"8173693691", 
-	$phone,
-	"Hello, ".current(explode(" ", $name)).". Welcome to {GAME_NAME}. Please reply with the code '$phone_verification_token' to confirm your phone number. Thank you."
-);
+try {
+        $sms = $twilio_client->messages->create(
+                $phone,
+                array(
+                        'from' => PHONE_NUMBER,
+                        'body' => "Hello ".current(explode(" ", $name)).", welcome to " . GAME_NAME . ". Please reply with the code '$phone_verification_token' to confirm your phone number. Thank you."
+                )
+        );
+} catch (Twilio\Exceptions\RestException $e) {
+	error_log($e);
+}
 
-if (!$e || !$sms) {
-	error_log("Unable to send SMS or E-mail for user #{$db->insert_id}.");
+if (!$e) {
+	error_log("Unable to send e-mail for user #{$db->insert_id}.");
+}
+if (!@$sms) {
+	error_log("Unable to send SMS for user #{$db->insert_id}.");
 }
 
 echo 1;

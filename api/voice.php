@@ -19,7 +19,4 @@
 		echo '<Say voice="alice" language="en-GB">You are not registered for assassins.</Say>';
 	}
 	?>
-
-
-
 </Response>

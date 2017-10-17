@@ -11,7 +11,7 @@ require("template/top.php");
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>MHS Assassins</title>
+    <title><?php echo GAME_NAME; ?></title>
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -77,7 +77,7 @@ require("template/top.php");
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-5 col-md-offset-1">
-                    <h1>ASSASSINS <label class="label label-danger label-small">2015</label></h1>
+                    <h1>ASSASSINS <label class="label label-danger label-small">DEMO</label></h1>
                     <h2><i class="fa fa-info-circle"></i> About</h2>
 
                     <p>The game of Assassins is a student run tradition held at Martin. Through the years the game has been run by different students who elect themselves to take on the project. The game is simple, you are assigned a target to “assassinate” meanwhile someone is assigned to “assassinate” you. Last man standing wins.<br><strong><em>Only seniors are allowed to participate.</em></strong></p>
