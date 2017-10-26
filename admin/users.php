@@ -75,7 +75,7 @@ if (isset($_GET['toggle'])) {
 				preg_match( '/^(?:\+1)(\d{3})(\d{3})(\d{4})$/', $r['phone'],  $matches );
 				$result = '('.$matches[1] . ')-' .$matches[2] . '-' . $matches[3];
 
-				$assassinations = $db->query("SELECT count(*) FROM assassinations WHERE assassin = '".$db->real_escape_string($r['id'])."'");
+				$assassinations = $db->query("SELECT count(*) FROM assassinations WHERE assassin = '".$db->real_escape_string($player['id'])."'");
 				$assassinations = current($assassinations->fetch_array(MYSQLI_NUM));
 
 				$unconfirmed_assassinations = $db->query("SELECT count(*) FROM assassinations WHERE assassin = '".$db->real_escape_string($r['id'])."' AND ver != 'both'");
@@ -99,7 +99,7 @@ if (isset($_GET['toggle'])) {
 				<td><a href="#player-<?php echo $player['id']; ?>"><?php echo $player['id']; ?></a></td>
 				<td><?php echo $player['validated']; ?></td>
 				<td><a href="javascript:toggle('<?php echo $player['id']; ?>');"><?php echo $player['eligible']; ?></a></td>
-				<td><?php echo $player['name']; ?></td>
+				<td><a href="/u/<?php echo $player['uid']; ?>"><?php echo $player['name']; ?></a></td>
 				<td><?php echo $assassinations; ?> (<?php echo $unconfirmed_assassinations; ?>)</td>
 				<td><?php echo $player['pin']; ?></td>
 				<td><?php echo $alive; if ($killed_by) { ?> <a href="#player-<?php echo $killed_by[0]; ?>">(<?php echo $killed_by[1]; ?>)</a><?php } ?></td>

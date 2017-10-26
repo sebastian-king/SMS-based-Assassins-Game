@@ -13,6 +13,14 @@ $("#menu-close").click(function(e) {
 $("#menu-toggle").click(function(e) {
     e.preventDefault();
     $("#sidebar-wrapper").toggleClass("active");
+	$(document).mouseup(function(e) {
+		if ($("#sidebar-wrapper").hasClass("active")) {
+			var container = $("#sidebar-wrapper");
+			if (!container.is(e.target) && container.has(e.target).length === 0) {
+				container.removeClass("active");
+			}
+		}
+	});
 });
 
     // Scrolls to the selected menu item on the page

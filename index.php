@@ -63,6 +63,9 @@ require("template/top.php");
             <a href="#statistics" data-toggle="modal" data-target="#statistics">Statistics</a>
         </li>
         <li>
+            <a href="#commands" data-toggle="modal" data-target="#commands">Phone Commands</a>
+        </li>
+        <li>
             <a href="#countdown">Countdown</a>
         </li>
         <li>
@@ -140,12 +143,19 @@ require("template/top.php");
         <div class="row">
             <div class="col-xs-12 text-center wow fadeIn">
                 <h2 class="heading">About Assassins</h2>
-                <p class="lead">The game of Assassins is a student run tradition held at Martin each year. Through the years the game has been run by different students who elect themselves to take on the project. The game is simple, although changes are made with each passing year, rules are added and modified, it has evolved much since its original version.<br><br>
-The game starts with students registering themselves as contestants. This is done specifically so that the competition is by choice only. Next, these players are all randomly assigned targets. This is done in a way so that every student has a different target, and every student has someone targeting them.<br><br>
-Once the hunt begins each student attempts to seek out their target and “assassinate” them. This is done by surprising their target and marking their skin with a sharpie marker. Once marked, that player is officially eliminated from the game. The assassin is then given his/her victim’s target.<br><br>
-When eliminated, both players must text <?php echo format_phone_number(PHONE_NUMBER); ?>. The person who made the kill will send the message “eliminated” and the person killed will send “rip”. From there the target will be taken out of the system, and the system will inform the assassin of their new target.<br><br>
-This idea is continued until there is only two players left in the pool. Each of them would have each other as targets so the last man standing wins.<br><br>
-One of the newer additions to the game is the “swiper no swiping” rule. Players are allowed to call out this phrase if they spot their assassin first which would grant them immunity from being assassinated by that assassin for the rest of the day. This ability can only be used once by the hunted for that particular assassin. If the assassin gets killed, his/her target is given the ability one more time against his/her new assassin.</p>
+                <p>The game of Assassins is a student run tradition held at Martin each year. Through the years the game has been run by different students who elect themselves to take on the project. The game is simple, although changes are made with each passing year, rules are added and modified, it has evolved much since its original version.</p>
+                
+				<p>The game starts with students registering themselves as contestants. This is done specifically so that the competition is by choice only. Next, these players are all randomly assigned targets. This is done in a way so that every student has a different target, and every student has someone targeting them.</p>
+
+				<p>Once the hunt begins each student attempts to seek out their target and “assassinate” them. This is done by surprising their target and marking their skin with a sharpie marker. Once marked, that player is officially eliminated from the game. The assassin is then given his/her victim’s target.</p>
+				
+				<p>When eliminated, both players must text <?php echo format_phone_number(PHONE_NUMBER); ?>. The person who made the kill will send the message “eliminated” and the person killed will send “rip”. From there the target will be taken out of the system, and the system will inform the assassin of their new target.</p>
+				
+				<p>Every Saturday, at midnight, all of the targets are randomly shuffled. Every player will be texted their new target, and have a new assassin. Come Monday morning, your assassin could be your best friend, or even the same person as before—who knows!
+				
+				<p>This is continued until there are only two players left in the pool. Each of them would have each other as targets so the last man standing wins.</p>
+				
+				<p>One of the newer additions to the game is the “swiper no swiping” rule. Players are allowed to call out this phrase if they spot their assassin first which would grant them immunity from being assassinated by that assassin for the rest of the day. This ability can only be used once by the target for that particular assassin, however it resets if there has been a shuffle and the assassin again has the target. If the assassin gets killed, his/her target is given the ability to call "swiper no swiping” one more time against his/her new assassin. The target must text “noswiping” following by his/her PIN, and the assassin must text “swiper” followed by his/her PIN. The game will then enforce the rule of no assassinations by the assassin for the rest of the day (until midnight).</p>
             </div
         ></div>
     </div>
@@ -330,6 +340,8 @@ One of the newer additions to the game is the “swiper no swiping” rule. Play
             <p><b>eliminated</b> - Text this only when you have eliminated your target</p>
             <p><b>rip &lt;pin&gt;</b> - Text rip followed by your PIN when you've been assassinated, e.g. rip 1234</p>
             <p><b>suicide &lt;pin&gt;</b> - Text suicide followed by your PIN if you want to leave the game at any time</p>
+            <p><b>noswiping &lt;pin&gt;</b> - Text noswiping followed by your PIN if you have managed to call "swiper no swiping" at your assassin, e.g. noswiping 1234</p>
+            <p><b>swiper &lt;pin&gt;</b> - Text swiper followed by your PIN if your target caught you coming for them and managed to call "swiper no swiping", e.g. swiper 1234</p>
             <p><b>pin(email)</b> - Texting pin gives you a link the page where you can set your PIN; texting pinemail emails you this link</p>
             <p><b>status</b> - Status tells you your current status in the game, either: alive/dead/suicided/assassinated/not_registered</p>
             <p><b>test</b> - This shows which of the verification steps you have completed</p>
@@ -414,7 +426,6 @@ $('a[data-toggle="modal"][data-target="#statistics"]').click(function() {
 		var top10 = "<ol>";
 		for (var i = 0; i < data.top10.length; ++i) {
 			top10 += "<li>"+data.top10[i][0]+", "+data.top10[i][1]+" kill"+((data.top10[i][1] == 1) ? "" : "s")+""+((data.top10[i][2] == 1) ? " <small>(deceased)</small>" : "")+"</li>";
-			console.log(data.top10[i]);
 		}
 		top10 += "</ol>";
 		$("#stat_top10").html(top10);
@@ -424,13 +435,20 @@ $('a[data-toggle="modal"][data-target="#statistics"]').click(function() {
 	$("#sidebar-wrapper").removeClass("active");
 });
 
+$('a[data-toggle="modal"][data-target="#commands"]').click(function() {
+	window.location.hash = "commands";
+	
+	$("#commands").modal('show');
+	
+	$("#sidebar-wrapper").removeClass("active");
+});
+	
 function update_leaderboard() {
 	$.get("/ajax/leaderboard.php", function(data) {
 		data = $.parseJSON(data);
 		var all = "<ol>";
 		for (var i = 0; i < data.all.length; ++i) {
 			all += "<li><a href='/u/"+data.all[i][3]+"' onClick='window.location=\"/u/"+data.all[i][3]+"\"'>"+data.all[i][0]+"<a/>, "+data.all[i][1]+" kill"+((data.all[i][1] == 1) ? "" : "s")+""+((data.all[i][2] == 1) ? " <small>(deceased)</small>" : "")+"</li>";
-			//console.log(data.top10[i]);
 		}
 		all += "</ol>";
 		$("#players_leaderboard").html(all);
@@ -445,30 +463,30 @@ $(window).on('resize', windowSize);
 $(document).ready(function() {
 	if (window.location.hash == "#statistics") {
 		$('a[data-toggle="modal"][data-target="#statistics"]').trigger('click');
-		document.title = "MHS Assassins | Statistics";
+		document.title = "<?php echo GAME_NAME; ?> | Statistics";
 	} else if (window.location.hash == "#commands") {
 		$("#commands").modal('show');
-		document.title = "MHS Assassins | Commands";
+		document.title = "<?php echo GAME_NAME; ?> | Commands";
 	} else if (window.location.hash == "#leaderboard") {
 		$("#leaderboard").modal('show');
 		update_leaderboard();
-		document.title = "MHS Assassins | Leaderboard";
+		document.title = "<?php echo GAME_NAME; ?> | Leaderboard";
 	}
 });
 
 $(window).bind('hashchange', function(e) {
 	if (window.location.hash == "#commands") {
 		$("#commands").modal('show');
-		document.title = "MHS Assassins | Commands";
+		document.title = "<?php echo GAME_NAME; ?> | Commands";
 	} else if (window.location.hash == "#leaderboard") {
 		$("#leaderboard").css("display", "block").attr("aria-hidden", "false");
 		$("#leaderboard").modal('show');
 		update_leaderboard();
-		document.title = "MHS Assassins | Leaderboard";
+		document.title = "<?php echo GAME_NAME; ?> | Leaderboard";
 	} else if (window.location.hash == "#statistics") {
 		$("#leaderboard").css("display", "none").attr("aria-hidden", "true");
 		$('a[data-toggle="modal"][data-target="#statistics"]').trigger('click');
-		document.title = "MHS Assassins | Statistics";
+		document.title = "<?php echo GAME_NAME; ?> | Statistics";
 	} else {
 		$("#commands").modal('hide');
 		$("#statistics").modal('hide');
@@ -478,7 +496,7 @@ $(window).bind('hashchange', function(e) {
 
 $('#statistics,#commands,#leaderboard').on('hidden.bs.modal', function() {
 		window.location.hash = "!";
-		document.title = "MHS Assassins";
+		document.title = "<?php echo GAME_NAME; ?>";
 });
 
 function windowSize() {
