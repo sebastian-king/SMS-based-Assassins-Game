@@ -6,7 +6,7 @@ $q = $db->query("SELECT * FROM players WHERE uid = '".$db->real_escape_string($u
 if ($q->num_rows == 1) {
 	$u = $q->fetch_array(MYSQLI_ASSOC);
 	if (isset($_GET['v'])) {
-		if ($_GET['v'] == $u['vere']) {
+		if ($_GET['v'] == $u['verify_email']) {
 			if ($u['validated'] == 'phone' || $u['validated'] == 'both') {
 				$validated = 'both';
 			} else {
@@ -14,16 +14,15 @@ if ($q->num_rows == 1) {
 			}
 			$db->query("UPDATE players SET validated = '$validated' WHERE id = '{$u['id']}' LIMIT 1");
 			$_SESSION['email_confirmed'] = true;
-			header("Location: /u/{$u['uid']}");
-			die();
+			die(header("Location: /u/{$u['uid']}"));
 		} else {
-			$error = "The verification code you entered was not valid, please try again. If you are having problems getting verified please contact us on <a href='https://twitter.com/Assassins2k15'>Twitter</a>.";
+			$error = "The verification code you entered was not valid, please try again. If you are having problems getting verified please contact us on <a href='https://twitter.com/" . TWITTER_HANDLE ."'>Twitter</a>.";
 		}
 	}
-	$title = $u['name'] . "'s Stats | MHS Assassins 2015";
+	$title = $u['name'] . "'s Stats | " . GAME_NAME;
 } else {
-	$u = array("id"=>-1,"uid"=>-1,"name"=>"Literally Nobody");
-	$title = "No player found | MHS Assassins 2015";
+	$u = array("id"=>-1,"uid"=>-1,"name"=>"Absolutely Nobody");
+	$title = "No player found | " . GAME_NAME;
 	$error = "There is no user here, you must have the wrong link, sorry.";
 	error_log("No user at: ".$_SERVER['REQUEST_URI']);
 }
@@ -33,7 +32,7 @@ if ($q->num_rows == 1) {
 		<meta charset="UTF-8">
 		<title><?php echo $title; ?></title>
 
-		<link href='http://fonts.googleapis.com/css?family=Lato:400,700,900' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Lato:400,700,900' rel='stylesheet' type='text/css'>
 		<link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet">
 		<link rel="stylesheet" href="/user/css/lib/bootstrap.min.css">
 		<link rel="stylesheet" href="/user/css/lib/bootstrap-responsive.min.css">
@@ -44,11 +43,21 @@ if ($q->num_rows == 1) {
 		<div id="fb-root"></div>
 
 		<div class="container">
-        	<?php 
-			if (isset($error)) {?><center><div class="alert alert-danger" role="alert" style="font-size:large;font-weight:800;display:inline-block;"><?php echo $error; ?></div></center><?php }
-			else
-			if (@$_SESSION['email_confirmed'] == true) {$_SESSION['email_confirmed']=false;?><center><div class="alert alert-success" role="alert" style="font-size:large;font-weight:800;display:inline-block;">Your e-mail address has been confirmed!<br><?php if ($u['validated'] == 'both') { "You are now completely verified and ready for MHS Assassins 2015! :)"; } else { echo " Please don't forget to verify your phone number, you cannot play without it. <br>If you are having trouble getting verified please contact us on <a href='https://twitter.com/Assassins2k15'>Twitter</a>."; } ?></div></center><?php }
-			 ?>
+        	<?php if (isset($error)): ?>
+        		<center><div class="alert alert-danger" role="alert" style="font-size:large;font-weight:800;display:inline-block;"><?php echo $error; ?></div></center>
+        	<?php elseif (@$_SESSION['email_confirmed'] == true):
+				$_SESSION['email_confirmed']=false; ?>
+				<center><div class="alert alert-success" role="alert" style="display:inline-block;">
+					<h3>Your e-mail address has been confirmed!</h3>
+					<p style="color: black;">
+					<?php if ($u['validated'] == 'both'): ?>
+						You are now completely verified and ready for <?php echo GAME_NAME; ?>! :)
+					<?php else: ?>
+						Please don't forget to verify your phone number, you cannot play without it. <br>If you are having trouble getting it verified please contact us on <a href='https://twitter.com/<?php echo TWITTER_HANDLE; ?>'>Twitter</a>.
+					<?php endif; ?>
+					</p>
+				</div></center>
+			<?php endif ?>
 			<div class="row row-main">
 				<div class="span5 offset2 main-content">
 					<img src="/user/img/logo.png" alt="Logo" width="80" height="80" class="top-logo visible-phone">

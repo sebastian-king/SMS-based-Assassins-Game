@@ -5,7 +5,7 @@ $p = base64_decode($_GET['q']);
 $uid = $p;
 $q = $db->query("SELECT * FROM players WHERE id = '".$db->real_escape_string($uid)."' LIMIT 1") or die("Database error, please let us know of this URL.");
 if ($q->num_rows == 1) {
-	$r = $q->fetch_array(MYSQL_ASSOC);
+	$r = $q->fetch_array(MYSQLI_ASSOC);
 	if (!empty($r['pin'])) {
 		$error = "Your PIN is already set. If you think you are getting this message in error, please contact us on <a href='https://twitter.com/Assassins2k15'>Twitter</a>.";
 	}
