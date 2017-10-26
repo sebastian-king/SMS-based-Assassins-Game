@@ -1,7 +1,7 @@
 <?php
 
 if (php_sapi_name() !== 'cli') {
-        die("This is a CLI only script, please run it on the server's terminal.");
+        die("This is a CLI only script, please run it on the server's terminal."); // the script cannot be cancelled via the web if there is an error
 }
 
 set_time_limit(300); // WARNING: This script can take a long time to run, it will time out after 5 minutes simply because this can stop the server crashing if somehow the recursion ends in an infinite loop
@@ -16,7 +16,7 @@ if (preg_match("/sandbox/i", @$argv[1])) {
 }
 //
 
-echo "<pre>", PHP_EOL, date('l jS \of F Y h:i:s A'), PHP_EOL;
+echo date('l jS \of F Y h:i:s A'), PHP_EOL;
 $q = $db->query("SELECT * FROM players WHERE target > ''") or die($db->error);
 echo "Total number of players to be shuffled: ", $q->num_rows, PHP_EOL;
 
@@ -68,7 +68,7 @@ if ($SANDBOX) {
 	die(PHP_EOL . "The sandbox parameter was specified, therefore we are exiting now without writing changes to the database and without texting anyone." . PHP_EOL);
 }
 
-echo PHP_EOL, "If the number above is larger than 0, kill this program NOW.", PHP_EOL;
+echo PHP_EOL, "If the number above is larger than 0, kill this program NOW by pressing Ctrl+C.", PHP_EOL;
 
 $i = 0;
 while ($i < 10) {
