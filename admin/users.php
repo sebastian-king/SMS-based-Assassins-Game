@@ -68,17 +68,15 @@ if (isset($_GET['toggle'])) {
 			<th>Phone number</th>
 		  </tr>
 			<?php
-			$i = 1;
-
 			$q = $db->query("SELECT * FROM players ORDER BY name ASC");
 			while ($player = $q->fetch_array(MYSQLI_ASSOC)) {
-				preg_match( '/^(?:\+1)(\d{3})(\d{3})(\d{4})$/', $r['phone'],  $matches );
-				$result = '('.$matches[1] . ')-' .$matches[2] . '-' . $matches[3];
+				preg_match( '/^(?:\+1)(\d{3})(\d{3})(\d{4})$/', $player['phone'],  $matches );
+				$formatted_phone_number = '('.$matches[1] . ')-' .$matches[2] . '-' . $matches[3];
 
 				$assassinations = $db->query("SELECT count(*) FROM assassinations WHERE assassin = '".$db->real_escape_string($player['id'])."'");
 				$assassinations = current($assassinations->fetch_array(MYSQLI_NUM));
 
-				$unconfirmed_assassinations = $db->query("SELECT count(*) FROM assassinations WHERE assassin = '".$db->real_escape_string($r['id'])."' AND ver != 'both'");
+				$unconfirmed_assassinations = $db->query("SELECT count(*) FROM assassinations WHERE assassin = '".$db->real_escape_string($player['id'])."' AND ver != 'both'");
 				$unconfirmed_assassinations = current($unconfirmed_assassinations->fetch_array(MYSQLI_NUM));
 
 				$target = $db->query("SELECT * FROM players WHERE id = '" . $db->real_escape_string($player['target'])."' LIMIT 1");
@@ -93,7 +91,6 @@ if (isset($_GET['toggle'])) {
 					$alive = "alive";
 					$killed_by = false;
 				}
-				$i++;
 				?>
 			  <tr id="<?php echo 'player-', $player['id']; ?>">
 				<td><a href="#player-<?php echo $player['id']; ?>"><?php echo $player['id']; ?></a></td>
@@ -105,7 +102,7 @@ if (isset($_GET['toggle'])) {
 				<td><?php echo $alive; if ($killed_by) { ?> <a href="#player-<?php echo $killed_by[0]; ?>">(<?php echo $killed_by[1]; ?>)</a><?php } ?></td>
 				<td><?php if ($target['name']) { echo $target['name']; } else { echo '<em>none</em>'; } ?> (<?php if ($target['id']) { echo $target['id']; } else { echo "deceased"; } ?>)</td>
 				<td><?php echo $player['email']; ?></td>
-				<td><?php echo $player['phone']; ?></td>
+				<td><?php echo $formatted_phone_number; ?></td>
 			  </tr>
 				<?php
 			}

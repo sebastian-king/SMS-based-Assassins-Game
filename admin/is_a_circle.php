@@ -3,9 +3,10 @@
 require("../template/top.php");
 
 if (php_sapi_name() !== 'cli') {
-	echo '<pre>';
+	echo '<a href=\'/admin/\'>Admin Home</a><pre>';
 }
 
+echo date('l jS \of F Y h:i:s A'), PHP_EOL;
 $q = $db->query("SELECT * FROM players WHERE target > ''") or die($db->error);
 echo "Total number of players still alive: ", $q->num_rows, PHP_EOL;
 

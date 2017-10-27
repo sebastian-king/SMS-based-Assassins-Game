@@ -65,13 +65,7 @@ $e = email($email,
 //error_log("EMAIL_SEND=$e=" . $email . "\n", 3,"mail.log"); // just in case
 
 try {
-        $sms = $twilio_client->messages->create(
-                $phone,
-                array(
-                        'from' => PHONE_NUMBER,
-                        'body' => "Hello ".current(explode(" ", $name)).", welcome to " . GAME_NAME . ". Please reply with the code '$phone_verification_token' to confirm your phone number. Thank you."
-                )
-        );
+	$sms = send_sms(PHONE_NUMBER, $phone, "Hello ".current(explode(" ", $name)).", welcome to " . GAME_NAME . ". Please reply with the code '$phone_verification_token' to confirm your phone number. Thank you.");
 } catch (Twilio\Exceptions\RestException $e) {
 	error_log($e);
 }

@@ -11,6 +11,22 @@ function ordinal($num) {
     return $num.'th';
 }
 
+function ago($time) {
+	if ($time > strtotime('midnight', time())) {
+		$timestamp = date("g:i a", $time);
+	} else if ($time > mktime(0, 0, 0, date("m"), date("d")-1, date("Y"))) {
+		$timestamp = "Yesterday, ".date("g:i a", $time);
+	} else if ($time > mktime(0, 0, 0, date("m"), date("d")-7, date("Y"))) {
+		$timestamp = date("l, g:i a", $time);
+	} else {
+		$timestamp = date("g:i a, jS F", $time);
+		if (date("Y") != date("Y", $time)) {
+			$timestamp .= ", " . date("Y", $time);
+		}
+	}
+	return $timestamp;
+}
+
 /* token generation functions start */
 function crypto_rand_secure($min, $max) {
         $range = $max - $min;

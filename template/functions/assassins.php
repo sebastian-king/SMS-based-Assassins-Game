@@ -65,10 +65,10 @@ function assassination($id) {
 	global $db, $base;
 	$q = $db->query("SELECT * FROM assassinations WHERE id = '".$db->real_escape_string($id)."' LIMIT 1");
 	if ($q->num_rows == 1) {
-		$r = $q->fetch_array(MYSQL_ASSOC);
-		$q = $db->query("SELECT * FROM pictures WHERE uid = '{$r['assassin']}' AND used = 0 ORDER BY id DESC LIMIT 1");
+		$r = $q->fetch_array(MYSQLI_ASSOC);
+		$q = $db->query("SELECT * FROM pictures WHERE user_id = '{$r['assassin']}' AND used = 0 ORDER BY id DESC LIMIT 1");
 		if ($q->num_rows == 1) {
-			$p = $q->fetch_array(MYSQL_ASSOC);
+			$p = $q->fetch_array(MYSQLI_ASSOC);
 			$media = $base . $p['assassins_url']; // uri
 		} else {
 			$media = false;
@@ -81,7 +81,6 @@ function assassination($id) {
 		} else {
 			$text = trim(uid2name($r['assassin']))." has assassinated ".trim(uid2name($r['target']));
 		}
-		smsUpdateAll($text);
 		tweet($text . "", $media); // hashtag?
 		return true;
 	} else {
@@ -89,7 +88,18 @@ function assassination($id) {
 	}
 }
 
+function send_sms($from, $to, $body) {
+	return $twilio_client->messages->create(
+			$to,
+			array(
+					'from' => $from,
+					'body' => $body
+			)
+	);
+}
+
 function tweet($msg, $media = false) {
+	return;
 	global $cb;
 	if ($media) {
 		$media_id = $cb->media_upload(array(
@@ -126,22 +136,6 @@ function uid2phone($uid) {
 	$q = $db->query("SELECT phone FROM players WHERE id = '".$db->real_escape_string($uid)."' LIMIT 1");
 	$r = $q->fetch_array(MYSQLI_NUM);
 	return $r[0];
-}
-
-function ago($time) {
-	if ($time > strtotime('midnight', time())) {
-		$timestamp = date("g:i a", $time);
-	} else if ($time > mktime(0, 0, 0, date("m"), date("d")-1, date("Y"))) {
-		$timestamp = "Yesterday, ".date("g:i a", $time);
-	} else if ($time > mktime(0, 0, 0, date("m"), date("d")-7, date("Y"))) {
-		$timestamp = date("l, g:i a", $time);
-	} else {
-		$timestamp = date("g:i a, jS F", $time);
-		if (date("Y") != date("Y", $time)) {
-			$timestamp .= ", " . date("Y", $time);
-		}
-	}
-	return $timestamp;
 }
 
 function rank($id, $top = false) {

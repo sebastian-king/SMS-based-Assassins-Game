@@ -3,6 +3,14 @@ SetEnv BASE_PATH /var/www/assassins
 RewriteEngine On
 RewriteBase /
 
+RewriteCond %{HTTP_HOST} !^$
+RewriteCond %{HTTP_HOST} !^www\. [NC]
+RewriteCond %{HTTPS}s ^on(s)|
+RewriteRule ^ http%1://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+RewriteCond %{DOCUMENT_ROOT}/$1.php -f
+RewriteRule ^(([^/]+/)*[^.]+)$ /$1.php [L]
+
 RewriteRule ^u/(.*?)/v([a-zA-Z0-9]{6})$ /user/index.php?q=$1&v=$2
 RewriteRule ^u/(.*?)(/|)$ /user/index.php?q=$1
 RewriteRule ^p/(.*?)(/|)$ /pin/index.php?q=$1

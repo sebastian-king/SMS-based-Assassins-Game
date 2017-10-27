@@ -89,13 +89,7 @@ $q = $db->query("SELECT * FROM players WHERE target > '' ORDER BY id ASC");
 while ($r = $q->fetch_array(MYSQLI_ASSOC)) {
 		echo "VALIDATED:(", str_pad($r['validated'], 5), ") NAME:", str_pad($r['name'], 25, " "), " PIN:(", $r['pin'], ") TARGET:", str_pad(uid2name($r['target']), 25, " "), PHP_EOL;
 		try {
-				$sms = $twilio_client->messages->create(
-						$r['phone'],
-						array(
-								'from' => PHONE_NUMBER,
-								'body' => uid2name($r['target'])
-						)
-				);
+			$sms = send_sms(PHONE_NUMBER, $r['phone'], uid2name($r['target']));
 		} catch (Twilio\Exceptions\RestException $e) {
 			echo var_dump("ERROR CAUGHT $e") . PHP_EOL;
 		}
